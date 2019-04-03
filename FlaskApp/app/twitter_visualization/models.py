@@ -45,4 +45,6 @@ class Tweet(Base):
     __tablename__ = 'tweet'
     text    = db.Column(db.String(512),  nullable=False)
     created_at = db.Column(db.String(128),  nullable=False)
+    retweets = db.Column(db.Integer())
+    favorites = db.Column(db.Integer())
     sentiment = db.Column(db.String(128), nullable=True)
