@@ -18,9 +18,9 @@ tweet_fetcher = TweetFetcher()
 
 @app.route('/', methods=['GET'])
 def index():
-    # print('hit index route\n\n')
-    # print(tweet_fetcher.get_tweets(query='Donald', count=200))
-    # print('\n\nFrom DB')
-    # print(Tweet.query.all())
+    print('hit index route\n\n')
+    print(tweet_fetcher.get_tweets(query='Donald', count=300))
+    print('\n\nFrom DB')
+    print(Tweet.query.all())
     return render_template("index.html")
 
