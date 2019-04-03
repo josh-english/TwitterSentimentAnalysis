@@ -81,17 +81,18 @@ class TweetFetcher:
                 parsed_tweet['favorite_count'] = tweet.favorite_count
                 parsed_tweet['coordinates'] = tweet.coordinates
 
-                # appending parsed tweet to tweets list
-                if tweet.retweet_count > 0:
-                    # if tweet has retweets, ensure that it is appended only once
-                    # Make sure the coordinates value isn't null too
-                    if parsed_tweet not in tweets and tweet.coordinates and parsed_tweet['coordinates'] is not None:
+                if parsed_tweet['coordinates'] is not None:
+                    # appending parsed tweet to tweets list
+                    if tweet.retweet_count > 0:
+                        # if tweet has retweets, ensure that it is appended only once
+                        # Make sure the coordinates value isn't null too
+                        if parsed_tweet not in tweets:
+                            tweets.append(parsed_tweet)
+                    else:
                         tweets.append(parsed_tweet)
-                else:
-                    tweets.append(parsed_tweet)
 
                 # return parsed tweets
-                self.add_tweets_to_db(tweets)
+            self.add_tweets_to_db(tweets)
             return tweets
 
         except tweepy.TweepError as e:
