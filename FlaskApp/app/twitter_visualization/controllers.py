@@ -35,7 +35,8 @@ try:
     api = tweepy.API(auth)
     # tweet_fetcher = TweetFetcher()
     tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
-    thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
+    thread = Thread(target=tweet_streamer.filter, kwargs={'locations':[-125,25,-65,48]})
+    thread.start()
 
 
     # tweet_streamer.filter(track=['Donald', 'Trump', 'Tim Ryan', 'Gillibrand', 'Beto', 'O\'Rourke', 'ORourke',
@@ -44,7 +45,6 @@ try:
     #                              'Biden'])
 except ValueError as error:
     print("Error: Authentication Failed")
-
 
 @app.route('/fetch', methods=['GET'])
 def fetch():
