@@ -22,13 +22,13 @@ def not_found(error):
 
 
 # Import a module / component using its blueprint handler variable (twitter_visualization)
-from app.twitter_visualization.controllers import index_blueprint
+from app.twitter_visualization.controllers import index_blueprint, fetch_blueprint
 
 # Register blueprint(s)
 app.register_blueprint(index_blueprint)
 # app.register_blueprint(xyz_module)
 # ..
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Build the database:
 # This will create the database file using SQLAlchemy
 db.create_all()
