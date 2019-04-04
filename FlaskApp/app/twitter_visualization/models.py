@@ -23,3 +23,14 @@ class Tweet(Base):
     created_at = db.Column(db.DateTime, nullable=False)
     latitude = db.Column(db.Float(), nullable=False)
     longitude = db.Column(db.Float(), nullable=False)
+
+    def as_dict(self):
+        a_dict = {'text': self.text,
+                  'candidate': self.candidate,
+                  'retweets': self.retweets,
+                  'favorites': self.favorites,
+                  'sentiment': self.sentiment,
+                  'created_at': self.created_at,
+                  'latitude': self.latitude,
+                  'longitude': self.longitude}
+        return a_dict

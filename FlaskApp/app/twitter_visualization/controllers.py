@@ -1,18 +1,17 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, \
-    flash, g, session, redirect, url_for
+from flask import Blueprint, request, render_template, jsonify
 
 # Import the database object from the main app module
 from app import app
 from threading import Thread
 
-from .TweetFetcher import TweetFetcher
 from .TweetStreamer import MyStreamListener
 
 # Import module models (i.e. User)
 from app.twitter_visualization.models import Tweet
 from tweepy import OAuthHandler
 import tweepy
+from flask import jsonify
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 index_blueprint = Blueprint('index', __name__)
@@ -35,26 +34,11 @@ try:
     api = tweepy.API(auth)
     # tweet_fetcher = TweetFetcher()
     tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
-    thread = Thread(target=tweet_streamer.filter, kwargs={'locations':[-125,25,-65,48]})
+    thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
     thread.start()
 
-
-    # tweet_streamer.filter(track=['Donald', 'Trump', 'Tim Ryan', 'Gillibrand', 'Beto', 'O\'Rourke', 'ORourke',
-    #                              'HIckenlooper', 'inslee', 'bernie', 'sanders', 'klobuchar', 'Warren', 'Kamala',
-    #                              'Buttigeig', 'buttigieg', 'Julian Castro', 'John Delaney', 'Tulsi Gabbard', 'Cory Booker',
-    #                              'Biden'])
 except ValueError as error:
     print("Error: Authentication Failed")
-
-@app.route('/fetch', methods=['GET'])
-def fetch():
-    if tweet_fetcher is None:
-        return 'Auth Error with Twitter API'
-    print('hit fetch route\n\n')
-    print(tweet_fetcher.get_tweets(query='Donald', count=300))
-    print('\n\nFrom DB')
-    print(Tweet.query.all())
-    return render_template("MostRecentTweets.html")
 
 
 @app.route('/', methods=['GET'])
@@ -63,6 +47,20 @@ def index():
         print('streamer is offline')
     print('hit index route\n\n')
 
-    print('\n\nFrom DB')
-    print(Tweet.query.all())
     return render_template("Index.html")
+
+
+@app.route('/fetch', methods=['GET'])
+def fetch():
+    date_start = MyStreamListener.to_datetime(request.args.get('dateTime_start'))
+    date_end = MyStreamListener.to_datetime(request.args.get('dateTime_end'))
+    list_of_candidates = request.args.get('candidates')
+    tweets = []
+    for candidate in list_of_candidates.split(','):
+        temp_tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
+            .filter(Tweet.candidate == candidate).all()
+        tweets = tweets + temp_tweets
+    serializable_tweets = []
+    for tweet in tweets:
+        serializable_tweets.append(tweet.as_dict())
+    return jsonify(serializable_tweets)
