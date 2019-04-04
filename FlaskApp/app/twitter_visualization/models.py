@@ -16,6 +16,7 @@ class Base(db.Model):
 class Tweet(Base):
     __tablename__ = 'tweet'
     text = db.Column(db.String(512), nullable=False)
+    candidate = db.Column(db.String(256), nullable=False)
     retweets = db.Column(db.Integer(), nullable=False, default=0)
     favorites = db.Column(db.Integer(), nullable=False, default=0)
     sentiment = db.Column(db.String(128), nullable=False)
