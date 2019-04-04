@@ -4,6 +4,8 @@ from app import db
 from app.twitter_visualization.models import Tweet
 from textblob import TextBlob
 import re
+from datetime import datetime, timedelta
+from email.utils import parsedate_tz
 
 
 # override tweepy.StreamListener to add logic to on_status
@@ -35,7 +37,7 @@ class MyStreamListener(tweepy.StreamListener):
         # saving sentiment of tweet
         parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet['text'])
         # add the date created to our dictionary
-        parsed_tweet['created_at'] = tweet['created_at']
+        parsed_tweet['created_at'] = self.to_datetime(tweet['created_at'])
         parsed_tweet['retweet_count'] = tweet['retweet_count']
         parsed_tweet['favorite_count'] = tweet['favorite_count']
         if tweet['coordinates'] is not None:
@@ -68,6 +70,7 @@ class MyStreamListener(tweepy.StreamListener):
                              longitude=tweet['coordinates'][0],
                              candidate=tweet['candidate'])
             db.session.add(db_tweet)
+            db.session.commit()
 
     def get_tweet_sentiment(self, tweet):
         """
@@ -127,3 +130,9 @@ class MyStreamListener(tweepy.StreamListener):
         using simple regex statements.
         """
         return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) \n {36}|(\w+:\/\/\S+)", " ", tweet).split())
+
+    @staticmethod
+    def to_datetime(datestring):
+        time_tuple = parsedate_tz(datestring.strip())
+        dt = datetime(*time_tuple[:6])
+        return dt - timedelta(seconds=time_tuple[-1])
