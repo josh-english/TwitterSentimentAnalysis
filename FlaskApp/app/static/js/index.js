@@ -6,9 +6,13 @@ end.setHours(23,59,59,999);
 var list_of_candidates = '';
 var map;
 
+$(function () {
+    $('#datetimepicker').datetimepicker({
+    });
+});
+
 var markers = [];
 $(document).ready(function(){
-
     ajaxFetch();
 
     $('.btn').click(function() {
