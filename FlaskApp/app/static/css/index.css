@@ -1,12 +1,16 @@
-.row {
-    padding: 5px;
-}
-
 .button-column {
-    padding:10;
     background: #002233;
+    text-align:center;
 }
 
 .page-background {
     background: #000033;
+}
+
+.avg-sentiment {
+    color: white;
+}
+
+.num-tweets {
+    color: white;
 }

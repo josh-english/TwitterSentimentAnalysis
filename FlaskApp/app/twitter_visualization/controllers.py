@@ -11,7 +11,8 @@ from .TweetStreamer import MyStreamListener
 from app.twitter_visualization.models import Tweet
 from tweepy import OAuthHandler
 import tweepy
-from flask import jsonify
+
+import gmplot
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 index_blueprint = Blueprint('index', __name__)
@@ -57,6 +58,7 @@ def fetch():
     list_of_candidates = request.args.get('candidates')
     stats = {}
     serializable_tweets = []
+    locations = {'lats' :[], 'longs': [], 'sentiment': []}
     for candidate in list_of_candidates.split(','):
         tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
             .filter(Tweet.candidate == candidate).all()
@@ -65,11 +67,13 @@ def fetch():
         if len(tweets) > 0:
             for tweet in tweets:
                 dict_tweet = tweet.as_dict()
+                locations['lats'].append(dict_tweet['latitude'])
+                locations['longs'].append(dict_tweet['longitude'])
+                locations['sentiment'].append(float(dict_tweet['sentiment']))
                 sentiment_sum += float(dict_tweet['sentiment'])
                 serializable_tweets.append(dict_tweet)
             average = sentiment_sum / len(tweets)
             stats[candidate]['avg_sentiment'] = average
         else:
             stats[candidate]['avg_sentiment'] = 0
-
-    return jsonify(stats)
+    return jsonify({'stats': stats, 'tweets': serializable_tweets})

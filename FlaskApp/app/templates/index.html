@@ -9,85 +9,359 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="../static/js/index.js"></script>
     <link rel="stylesheet" href="../static/css/index.css">
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTXfAl3wsdkXo6eTsDPTx8H2zaCWYpEfE&callback=initMap">
+    </script>
 </head>
 <body class="page-background">
 
 <div class="container">
     <div class="row">
-        <div class="col-md-10">
-          One of three columnsoapodignvpoajnvpoajnvepoaenvpoaeernvpaeorngkj
+        <div class="col-md-8" id="map">
+
         </div>
-        <div class="col-md-2 button-column">
+        <div class="col-md-4 button-column">
           <div class="row">
-              <button type="button" class="btn btn-success" id="trump">Donald Trump</button>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                <button type="button" class="btn btn-success" id="trump">Donald Trump</button>
+                </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="trump-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="trump-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-danger" id="ryan">Tim Ryan</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="ryan-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="ryan-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-                <button type="button" class="btn btn-danger" id="ryan">Tim Ryan</button>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-danger" id="gilliband">Kirsten Gilliband</button>
+                </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="gilliband-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="gilliband-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                <button type="button" class="btn btn-danger" id="rourke">Beto O'Rourke</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="rourke-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="rourke-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="gilliband">Kirsten Gilliband</button>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-danger" id="hickenlooper">John Hickenlooper</button>
+                </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="hickenlooper-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="hickenlooper-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-danger" id="inslee">Jay Inslee</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="inslee-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="inslee-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="rourke">Beto O'Rourke</button>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-danger" id="sanders">Bernie Sanders</button>
+                </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="sanders-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="sanders-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-danger" id="klobuchar">Amy Klobuchar</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="klobuchar-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="klobuchar-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="hickenlooper">John Hickenlooper</button>
+            <div class="col-md-6">
+              <div class="row">
+                  <div class="col">
+                    <button type="button" class="btn btn-danger" id="warren">Elizabeth Warren</button>
+                </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="warren-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="warren-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-danger" id="harris">Kamala Harris</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="harris-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="harris-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="inslee">Jay Inslee</button>
+            <div class="col-md-6">
+              <div class="row">
+                  <div class="col">
+                    <button type="button" class="btn btn-danger" id="buttigieg">Pete Buttigieg</button>
+                  </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="buttigieg-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="buttigieg-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-danger" id="castro">Julián Castro</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="castro-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="castro-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="sanders">Bernie Sanders</button>
+            <div class="col-md-6">
+              <div class="row">
+                  <div class="col">
+                    <button type="button" class="btn btn-danger" id="delaney">John Delaney</button>
+                  </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="delaney-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="delaney-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                <button type="button" class="btn btn-danger" id="gabbard">Tulsi Gabbard</button>
+               </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="gabbard-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="gabbard-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="row">
-              <button type="button" class="btn btn-danger" id="klobuchar">Amy Klobuchar</button>
+            <div class="col-md-6">
+              <div class="row">
+                  <div class="col">
+                        <button type="button" class="btn btn-danger" id="booker">Cory Booker</button>
+                  </div>
+              </div>
+                <div class="row avg-sentiment">
+                    <div class="col-md-6 num-tweets">
+                        <div id="booker-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="booker-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-danger" id="biden">Joe Biden</button>
+                </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-6 num-tweets">
+                        <div id="biden-num">
+                            0
+                        </div>
+                    </div>
+                    <div class="col-md-6 avg-sentiment">
+                        <div id="biden-avg">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="warren">Elizabeth Warren</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="harris">Kamala Harris</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="buttigieg">Pete Buttigieg</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="castro">Julián Castro</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="delaney">John Delaney</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="gabbard">Tulsi Gabbard</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="booker">Cory Booker</button>
-          </div>
-          <div class="row">
-              <button type="button" class="btn btn-danger" id="biden">Joe Biden</button>
-          </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <button type="button" class="btn btn-secondary btn-lg btn-block text-center disabled">Example</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 num-tweets">
+                            <div>
+                                # of Tweets
+                            </div>
+                        </div>
+                        <div class="col-md-6 avg-sentiment">
+                            <div>
+                                Avg Sentiment
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<span id="tweets">
-
-</span>
-            <!--return 'trump'-->
-            <!--return 'ryan'-->
-            <!--return 'gilliband'-->
-            <!--return 'rourke'-->
-            <!--return 'hickenlooper'-->
-            <!--return 'inslee'-->
-            <!--return 'sanders'-->
-            <!--return 'klobuchar'-->
-            <!--return 'warren'-->
-            <!--return 'harris'-->
-            <!--return 'buttigieg'-->
-            <!--return 'castro'-->
-            <!--return 'delaney'-->
-            <!--return 'gabbard'-->
-            <!--return 'booker'-->
-            <!--return 'biden'-->
-
 </body>
 </html>
