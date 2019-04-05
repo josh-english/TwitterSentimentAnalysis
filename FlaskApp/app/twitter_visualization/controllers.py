@@ -55,12 +55,21 @@ def fetch():
     date_start = MyStreamListener.to_datetime(request.args.get('dateTime_start'))
     date_end = MyStreamListener.to_datetime(request.args.get('dateTime_end'))
     list_of_candidates = request.args.get('candidates')
-    tweets = []
-    for candidate in list_of_candidates.split(','):
-        temp_tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
-            .filter(Tweet.candidate == candidate).all()
-        tweets = tweets + temp_tweets
+    stats = {}
     serializable_tweets = []
-    for tweet in tweets:
-        serializable_tweets.append(tweet.as_dict())
-    return jsonify(serializable_tweets)
+    for candidate in list_of_candidates.split(','):
+        tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
+            .filter(Tweet.candidate == candidate).all()
+        stats[candidate] = {'length': len(tweets)}
+        sentiment_sum = 0
+        if len(tweets) > 0:
+            for tweet in tweets:
+                dict_tweet = tweet.as_dict()
+                sentiment_sum += float(dict_tweet['sentiment'])
+                serializable_tweets.append(dict_tweet)
+            average = sentiment_sum / len(tweets)
+            stats[candidate]['avg_sentiment'] = average
+        else:
+            stats[candidate]['avg_sentiment'] = 0
+
+    return jsonify(stats)

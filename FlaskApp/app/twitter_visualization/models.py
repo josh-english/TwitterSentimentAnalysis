@@ -15,7 +15,9 @@ class Base(db.Model):
 
 class Tweet(Base):
     __tablename__ = 'tweet'
+    twitter_id = db.Column(db.String(256), nullable=False)
     text = db.Column(db.String(512), nullable=False)
+    username = db.Column(db.String(256), nullable=False)
     candidate = db.Column(db.String(256), nullable=False)
     retweets = db.Column(db.Integer(), nullable=False, default=0)
     favorites = db.Column(db.Integer(), nullable=False, default=0)
@@ -26,6 +28,7 @@ class Tweet(Base):
 
     def as_dict(self):
         a_dict = {'text': self.text,
+                  'username': self.username,
                   'candidate': self.candidate,
                   'retweets': self.retweets,
                   'favorites': self.favorites,
