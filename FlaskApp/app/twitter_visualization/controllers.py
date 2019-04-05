@@ -1,18 +1,18 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, \
-    flash, g, session, redirect, url_for
+from flask import Blueprint, request, render_template, jsonify
 
 # Import the database object from the main app module
 from app import app
 from threading import Thread
 
-from .TweetFetcher import TweetFetcher
 from .TweetStreamer import MyStreamListener
 
 # Import module models (i.e. User)
 from app.twitter_visualization.models import Tweet
 from tweepy import OAuthHandler
 import tweepy
+
+import gmplot
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 index_blueprint = Blueprint('index', __name__)
@@ -35,26 +35,11 @@ try:
     api = tweepy.API(auth)
     # tweet_fetcher = TweetFetcher()
     tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
-    thread = Thread(target=tweet_streamer.filter, kwargs={'locations':[-125,25,-65,48]})
+    thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
     thread.start()
 
-
-    # tweet_streamer.filter(track=['Donald', 'Trump', 'Tim Ryan', 'Gillibrand', 'Beto', 'O\'Rourke', 'ORourke',
-    #                              'HIckenlooper', 'inslee', 'bernie', 'sanders', 'klobuchar', 'Warren', 'Kamala',
-    #                              'Buttigeig', 'buttigieg', 'Julian Castro', 'John Delaney', 'Tulsi Gabbard', 'Cory Booker',
-    #                              'Biden'])
 except ValueError as error:
     print("Error: Authentication Failed")
-
-@app.route('/fetch', methods=['GET'])
-def fetch():
-    if tweet_fetcher is None:
-        return 'Auth Error with Twitter API'
-    print('hit fetch route\n\n')
-    print(tweet_fetcher.get_tweets(query='Donald', count=300))
-    print('\n\nFrom DB')
-    print(Tweet.query.all())
-    return render_template("MostRecentTweets.html")
 
 
 @app.route('/', methods=['GET'])
@@ -63,6 +48,32 @@ def index():
         print('streamer is offline')
     print('hit index route\n\n')
 
-    print('\n\nFrom DB')
-    print(Tweet.query.all())
     return render_template("Index.html")
+
+
+@app.route('/fetch', methods=['GET'])
+def fetch():
+    date_start = MyStreamListener.to_datetime(request.args.get('dateTime_start'))
+    date_end = MyStreamListener.to_datetime(request.args.get('dateTime_end'))
+    list_of_candidates = request.args.get('candidates')
+    stats = {}
+    serializable_tweets = []
+    locations = {'lats' :[], 'longs': [], 'sentiment': []}
+    for candidate in list_of_candidates.split(','):
+        tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
+            .filter(Tweet.candidate == candidate).all()
+        stats[candidate] = {'length': len(tweets)}
+        sentiment_sum = 0
+        if len(tweets) > 0:
+            for tweet in tweets:
+                dict_tweet = tweet.as_dict()
+                locations['lats'].append(dict_tweet['latitude'])
+                locations['longs'].append(dict_tweet['longitude'])
+                locations['sentiment'].append(float(dict_tweet['sentiment']))
+                sentiment_sum += float(dict_tweet['sentiment'])
+                serializable_tweets.append(dict_tweet)
+            average = sentiment_sum / len(tweets)
+            stats[candidate]['avg_sentiment'] = average
+        else:
+            stats[candidate]['avg_sentiment'] = 0
+    return jsonify({'stats': stats, 'tweets': serializable_tweets})

@@ -29,6 +29,8 @@ class MyStreamListener(tweepy.StreamListener):
         parsed_tweet = {}
 
         # saving text of tweet
+        parsed_tweet['twitter_id'] = tweet['id_str']
+        parsed_tweet['username'] = tweet['user']['name']
         parsed_tweet['text'] = tweet['text'].lower()
         parsed_tweet['candidate'] = self.get_candidate(tweet['text'].lower())
         if parsed_tweet['candidate'] is None:
@@ -49,12 +51,9 @@ class MyStreamListener(tweepy.StreamListener):
 
         if parsed_tweet['coordinates'] is not None:
             # appending parsed tweet to tweets list
-            if tweet['retweet_count'] > 0:
-                # if tweet has retweets, ensure that it is appended only once
-                # Make sure the coordinates value isn't null too
-                if parsed_tweet not in tweets:
-                    tweets.append(parsed_tweet)
-            else:
+            if Tweet.query.filter(Tweet.text == parsed_tweet['text']) \
+                    .filter(Tweet.username == parsed_tweet['username']).count() == 0 and\
+                    parsed_tweet not in tweets:
                 tweets.append(parsed_tweet)
 
             # return parsed tweets
@@ -64,7 +63,8 @@ class MyStreamListener(tweepy.StreamListener):
     # Adds completed tweet objects to the db. Assumes the tweets are fully updated.
     def add_tweets_to_db(self, tweets):
         for tweet in tweets:
-            db_tweet = Tweet(text=tweet['text'], retweets=tweet['retweet_count'], favorites=tweet['favorite_count'],
+            db_tweet = Tweet(username=tweet['username'], twitter_id=tweet['twitter_id'],
+                             text=tweet['text'], retweets=tweet['retweet_count'], favorites=tweet['favorite_count'],
                              sentiment=tweet['sentiment'], created_at=tweet['created_at'],
                              latitude=tweet['coordinates'][1],
                              longitude=tweet['coordinates'][0],
