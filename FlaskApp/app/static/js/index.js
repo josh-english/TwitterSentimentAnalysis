@@ -3,9 +3,10 @@ start.setHours(0,0,0,0);
 
 var end = new Date();
 end.setHours(23,59,59,999);
-var list_of_candidates = 'trump';
+var list_of_candidates = '';
 var map;
 
+var markers = [];
 $(document).ready(function(){
 
     ajaxFetch();
@@ -22,6 +23,10 @@ $(document).ready(function(){
 	        $(this).addClass("btn-success")
 	        $(this).addClass("active")
 	    }
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+        markers = [];
 	    // we have updated the button states now we need to use them to fetch the new map
         list_of_candidates = '';
 	    $('.btn').each(function() {
@@ -49,6 +54,26 @@ function ajaxFetch() {
                 }
                 $('#' + candidateKeys[i] + '-avg').text(data.stats[candidateKeys[i]]['avg_sentiment'].toFixed(4))
                 $('#' + candidateKeys[i] + '-num').text(data.stats[candidateKeys[i]]['length'])
+            }
+
+            for(var i = 0; i < data.tweets.length; i++) {
+                if(data.tweets[i].sentiment < 0) {
+                    var marker = new google.maps.Marker({
+                        position: {lat:parseFloat(data.tweets[i].latitude), lng:parseFloat(data.tweets[i].longitude)},
+                        icon: './static/images/red.png',
+                        title: data.tweets[i].text + '\nSentiment: ' + data.tweets[i].sentiment,
+                        map: map,
+                    });
+                    markers.push(marker);
+                } else {
+                    var marker = new google.maps.Marker({
+                        position: {lat:parseFloat(data.tweets[i].latitude), lng:parseFloat(data.tweets[i].longitude)},
+                        icon: './static/images/green.png',
+                        title: data.tweets[i].text + '\nSentiment: ' + data.tweets[i].sentiment,
+                        map: map
+                    });
+                    markers.push(marker);
+                }
             }
         }});
 }
