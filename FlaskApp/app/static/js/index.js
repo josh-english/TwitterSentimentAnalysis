@@ -6,9 +6,21 @@ end.setHours(23,59,59,999);
 var list_of_candidates = '';
 var map;
 
+$(function () {
+    $('#datepicker').datepicker({
+        autoclose: true,
+        onSelect: function(dateText, inst) {
+            start = $(this).datepicker( 'getDate' );
+            start.setHours(0,0,0,0);
+            end = $(this).datepicker( 'getDate' );
+            end.setHours(23,59,59,999);
+            ajaxFetch();
+        }
+    });
+});
+
 var markers = [];
 $(document).ready(function(){
-
     ajaxFetch();
 
     $('.btn').click(function() {
