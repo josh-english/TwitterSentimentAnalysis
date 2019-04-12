@@ -1,4 +1,4 @@
-# building keras based ml model
+# preprocessing dataset
 # heavily inspired by: https://www.analyticsvidhya.com/blog/2018/07/hands-on-sentiment-analysis-dataset-python/
 # and https://www.kaggle.com/paoloripamonti/twitter-sentiment-analysis
 
@@ -47,17 +47,17 @@ for i in range(len(tokenized_tweet)):
 data['clean_text'] = tokenized_tweet
 print(data.head(5))
 
-# map target labels to strings
-decode_map = {0: "NEGATIVE", 2: "NEUTRAL", 4: "POSITIVE"}
-
-
-def decode_sentiment(label):
-    return decode_map[int(label)]
-
-
-data['target'] = data['target'].apply(lambda x: decode_sentiment(x))
-
-print(data.head(5))
+# # map target labels to strings
+# decode_map = {0: "NEGATIVE", 2: "NEUTRAL", 4: "POSITIVE"}
+#
+#
+# def decode_sentiment(label):
+#     return decode_map[int(label)]
+#
+#
+# data['target'] = data['target'].apply(lambda x: decode_sentiment(x))
+#
+# print(data.head(5))
 
 # store preprocessed dataset in csv for easy import
 data[['target', 'clean_text']].to_csv('./data/cleaned.csv', encoding='utf-8', index=False)
