@@ -34,9 +34,9 @@ try:
     # create tweepy API object to fetch tweets
     api = tweepy.API(auth)
     # tweet_fetcher = TweetFetcher()
-    tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
-    thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
-    thread.start()
+    # tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
+    # thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
+    # thread.start()
 
 except ValueError as error:
     print("Error: Authentication Failed")
