@@ -1,1 +1,1 @@
-web: python ./FlaskApp/run.py
+web: gunicorn -b :$PORT app:app
