@@ -1,4 +1,4 @@
-
+.idea/
 Keras/data/data.csv
 Keras/data/sentiment140.zip
-
+*pyc
