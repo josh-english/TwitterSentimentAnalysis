@@ -23,11 +23,12 @@ from tqdm import tqdm
 tqdm.pandas(desc="progress-bar")
 
 # post process
+data['target'] = data['target'].progress_map(int)
 data['clean_text'] = data['clean_text'].progress_map(tokenize)
 data = data[data.clean_text != 'NC']
 data.reset_index(inplace=True)
 data.drop('index', inplace=True, axis=1)
-# print(data.head())
+print(data.tail())
 
 x_train, x_test, y_train, y_test = train_test_split(np.array(data['clean_text']), np.array(data['target']),
                                                     test_size=0.2)
