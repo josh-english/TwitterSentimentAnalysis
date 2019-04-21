@@ -48,7 +48,7 @@ def index():
         print('streamer is offline')
     print('hit index route\n\n')
 
-    return render_template("Index.html")
+    return render_template("index.html")
 
 
 @app.route('/fetch', methods=['GET'])
