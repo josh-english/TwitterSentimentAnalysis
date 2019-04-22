@@ -1,0 +1,6 @@
+.idea/
+Keras/data/data.csv
+Keras/data/sentiment140.zip
+*pyc
+.ipynb_checkpoints/
+__pycache__/
