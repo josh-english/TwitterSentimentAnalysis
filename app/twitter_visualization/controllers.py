@@ -8,9 +8,10 @@ from threading import Thread
 from .TweetStreamer import MyStreamListener
 
 # Import module models (i.e. User)
-from app.twitter_visualization.models import Tweet
+from app.twitter_visualization.models import Tweet, DaysStats
 from tweepy import OAuthHandler
 import tweepy
+from app import db
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 index_blueprint = Blueprint('index', __name__)
@@ -63,9 +64,9 @@ def fetch():
     list_of_candidates = request.args.get('candidates')
     stats = {}
     serializable_tweets = []
-    locations = {'lats' :[], 'longs': [], 'sentiment': []}
+    locations = {'lats': [], 'longs': [], 'sentiment': []}
     for candidate in list_of_candidates.split(','):
-        tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start)\
+        tweets = Tweet.query.filter(Tweet.created_at <= date_end).filter(Tweet.created_at >= date_start) \
             .filter(Tweet.candidate == candidate).all()
         stats[candidate] = {'length': len(tweets)}
         sentiment_sum = 0
@@ -79,6 +80,24 @@ def fetch():
                 serializable_tweets.append(dict_tweet)
             average = sentiment_sum / len(tweets)
             stats[candidate]['avg_sentiment'] = average
+            stats[candidate]['date_start'] = date_start
+            stats[candidate]['date_end'] = date_end
         else:
             stats[candidate]['avg_sentiment'] = 0
+            stats[candidate]['date_start'] = date_start
+            stats[candidate]['date_end'] = date_end
+        add_stats_to_db(stats)
     return jsonify({'stats': stats, 'tweets': serializable_tweets})
+
+
+def add_stats_to_db(stats):
+    for key, value in stats.items():
+        existing_stats = DaysStats.query.filter_by(range_start=value['date_start']).filter_by(
+                         range_end=value['date_end']).all()
+        for s in existing_stats:
+            db.session.delete(s)
+        stat = DaysStats(candidate=key, range_start=value['date_start'],
+                         range_end=value['date_end'], total_tweets=value['length'],
+                         average_sentiment=value['avg_sentiment'])
+        db.session.add(stat)
+        db.session.commit()
