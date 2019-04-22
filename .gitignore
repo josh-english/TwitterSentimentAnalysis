@@ -3,3 +3,6 @@ Keras/data/data.csv
 Keras/data/sentiment140.zip
 *pyc
 .ipynb_checkpoints/
+__pycache__/
+app/__pycache__/
+app/twitter_visualization/__pycache__/

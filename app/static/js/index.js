@@ -77,6 +77,14 @@ function ajaxFetch() {
                         map: map,
                     });
                     markers.push(marker);
+                } else if (data.tweets[i].sentiment == 0) {
+                    var marker = new google.maps.Marker({
+                        position: {lat:parseFloat(data.tweets[i].latitude), lng:parseFloat(data.tweets[i].longitude)},
+                        icon: './static/images/neutral.png',
+                        title: data.tweets[i].text + '\nSentiment: ' + data.tweets[i].sentiment,
+                        map: map
+                    });
+                    markers.push(marker);
                 } else {
                     var marker = new google.maps.Marker({
                         position: {lat:parseFloat(data.tweets[i].latitude), lng:parseFloat(data.tweets[i].longitude)},
