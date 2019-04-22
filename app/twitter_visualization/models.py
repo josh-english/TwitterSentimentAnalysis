@@ -13,6 +13,14 @@ class Base(db.Model):
                               onupdate=db.func.current_timestamp())
 
 
+class DaysStats(Base):
+    range_start = db.Column(db.DateTime, nullable=False)
+    range_end = db.Column(db.DateTime, nullable=False)
+    candidate = db.Column(db.String(256), nullable=False)
+    total_tweets = db.Column(db.Integer(), nullable=False, default=0)
+    average_sentiment = db.Column(db.Float(), nullable=False)
+
+
 class Tweet(Base):
     __tablename__ = 'tweet'
     twitter_id = db.Column(db.String(256), nullable=False)
