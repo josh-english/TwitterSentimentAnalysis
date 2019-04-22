@@ -12,17 +12,23 @@ from app.twitter_visualization.models import Tweet
 from tweepy import OAuthHandler
 import tweepy
 
-import gmplot
-
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 index_blueprint = Blueprint('index', __name__)
 fetch_blueprint = Blueprint('fetch', __name__)
 
 # keys and tokens from the Twitter Dev Console
-consumer_key = 'A6xpOxQJXPh4KuN0bBuJ4KYOf'
-consumer_secret = 'vQymfJkJy5YtGwsfFFMdPfjl2epVcfztFu8jGLSj4V0bzQoeMV'
-access_token = '930581527968219136-guZY4MWui7YkkUaC7O3S6LB1dfDoFji'
-access_token_secret = '7su6tFi4Nf66hWmzFgxlmNXgyucp4LADIUcs0oxXs9wlV'
+# consumer_key = 'A6xpOxQJXPh4KuN0bBuJ4KYOf'
+# consumer_secret = 'vQymfJkJy5YtGwsfFFMdPfjl2epVcfztFu8jGLSj4V0bzQoeMV'
+# access_token = '930581527968219136-guZY4MWui7YkkUaC7O3S6LB1dfDoFji'
+# access_token_secret = '7su6tFi4Nf66hWmzFgxlmNXgyucp4LADIUcs0oxXs9wlV'
+
+# keys for heroku
+# keys and tokens from the Twitter Dev Console
+consumer_key = 'MB8FIedv6xIA4m6ZjB6FGwGhW'
+consumer_secret = 'u1gbR8PeJy0ZgL3wLlKA8x9ZqtlmcE5dITr7ULXSv9VylQEuyY'
+access_token = '930581527968219136-R0fpb7ghJrBgRa9CWpWMjNFqLjMYRs1'
+access_token_secret = 'NCVT0Z2k8BXw6P48X5yKNjO8PwgV6y0PjbgWRVwRvabaD'
+
 tweet_fetcher = None
 tweet_streamer = None
 # attempt authentication
@@ -33,10 +39,9 @@ try:
     auth.set_access_token(access_token, access_token_secret)
     # create tweepy API object to fetch tweets
     api = tweepy.API(auth)
-    # tweet_fetcher = TweetFetcher()
-    # tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
-    # thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
-    # thread.start()
+    tweet_streamer = tweepy.Stream(auth=api.auth, listener=MyStreamListener())
+    thread = Thread(target=tweet_streamer.filter, kwargs={'locations': [-125, 25, -65, 48]})
+    thread.start()
 
 except ValueError as error:
     print("Error: Authentication Failed")
